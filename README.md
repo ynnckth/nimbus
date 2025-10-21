@@ -7,9 +7,9 @@ This project focuses on approximating the roll angle of the plane by measuring t
 
 The PWA is enabled for offline use during the flight.
 
-## Dev Setup
+## 💻 Dev Setup
 
-You will need to run and access the webapp via HTTPS for the device sensors to work. 
+You will need to run and access the webapp via HTTPS locally for the device sensors to work. 
 
 Generate self-signed cert: 
 ```shell
