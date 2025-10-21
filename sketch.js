@@ -42,7 +42,6 @@ function draw() {
   }
 
   drawHorizon(rollAngle);
-  drawBankMarks();
   drawIndicator();
 }
 
@@ -58,6 +57,9 @@ function drawHorizon(roll) {
   fill(180, 120, 60);
   rect(-width, 0, width*2, height);
   
+  // Perspective lines to create depth
+  drawPerspectiveLines();
+  
   // Horizon line
   stroke(255);
   strokeWeight(4);
@@ -65,19 +67,30 @@ function drawHorizon(roll) {
   pop();
 }
 
-function drawBankMarks() {
-  push();
-  translate(width/2, height/2);
-  stroke(255);
+function drawPerspectiveLines() {
+  stroke(255, 255, 255, 50); // Semi-transparent white
   strokeWeight(2);
-  noFill();
-  for (let angle=-30; angle<=30; angle+=10) {
-    const len = 40;
-    const x1 = sin(angle) * 100;
-    const y1 = -cos(angle) * 100;
-    line(x1-len, y1, x1+len, y1);
+  
+  // Vanishing point is above the horizon (in the sky)
+  const vanishX = 0;
+  const vanishY = -height * 0.2; // Slightly above horizon for stronger perspective
+  
+  // Draw converging lines from bottom (foreground) to vanishing point, but only on ground
+  const numLines = 9;
+  const groundWidth = width * 1.5; // Width at the foreground
+  
+  for (let i = 0; i <= numLines; i++) {
+    const startX = -groundWidth + (i / numLines) * groundWidth * 2;
+    
+    // Calculate where this line intersects the horizon (y=0)
+    // Line equation: y = startY + t * (vanishY - startY), x = startX + t * (vanishX - startX)
+    // At horizon: 0 = height*2 + t * (vanishY - height*2)
+    const t = (0 - height * 2) / (vanishY - height * 2);
+    const intersectX = startX + t * (vanishX - startX);
+    
+    // Draw line from foreground to horizon intersection only
+    line(startX, height * 2, intersectX, 0);
   }
-  pop();
 }
 
 function drawIndicator() {
