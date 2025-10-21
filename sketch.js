@@ -4,11 +4,16 @@ let lastTime = 0;
 let turnRate = 0;
 let rollAngle = 0;
 let permissionGranted = false;
+let planeImg;
 
 const maxRoll = 30;       // max roll in degrees
-const maxTurnRate = 6;    // deg/sec corresponding to max roll (realistic: 6°/s = coordinated turn)
-const smoothing = 0.08;   // smoothing factor (0-1, lower = smoother)
+const maxTurnRate = 4;    // deg/sec corresponding to max roll (realistic: 3°/s = standard rate, 4°/s = steeper)
+const smoothing = 0.03;   // smoothing factor (0-1, lower = smoother)
 const deadzone = 0.3;     // ignore turn rates below this (deg/sec)
+
+function preload() {
+  planeImg = loadImage('assets/plane.png');
+}
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -156,8 +161,8 @@ function drawPerspectiveLines() {
   const vanishY = -height * 0.2; // Slightly above horizon for stronger perspective
   
   // Draw converging lines from bottom (foreground) to vanishing point, but only on ground
-  const numLines = 9;
-  const groundWidth = width * 1.5; // Width at the foreground
+  const numLines = 25;
+  const groundWidth = width * 3; // Width at the foreground (covers entire visible area)
   
   for (let i = 0; i <= numLines; i++) {
     const startX = -groundWidth + (i / numLines) * groundWidth * 2;
@@ -174,16 +179,18 @@ function drawPerspectiveLines() {
 }
 
 function drawIndicator() {
-  fill(255);
-  noStroke();
-  triangle(
-    width/2-20, height/2+60,
-    width/2+20, height/2+60,
-    width/2, height/2+30
-  );
+  // Draw the plane icon
+  push();
+  imageMode(CENTER);
+  const planeWidth = 225;
+  const planeHeight = planeWidth * (planeImg.height / planeImg.width);
+  image(planeImg, width/2, height/2, planeWidth, planeHeight);
+  pop();
 
+  // Draw debug info
   textAlign(CENTER);
   textSize(16);
+  fill(255);
   text(`Heading: ${heading.toFixed(0)}°`, width/2, height-60);
   text(`Turn rate: ${turnRate.toFixed(1)}°/s`, width/2, height-40);
 }
