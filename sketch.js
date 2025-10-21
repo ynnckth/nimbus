@@ -5,6 +5,7 @@ let turnRate = 0;
 let rollAngle = 0;
 let permissionGranted = false;
 let planeImg;
+let elevation = 0; // elevation in meters
 
 const maxRoll = 30;       // max roll in degrees
 const maxTurnRate = 4;    // deg/sec corresponding to max roll (realistic: 3°/s = standard rate, 4°/s = steeper)
@@ -28,13 +29,35 @@ function setup() {
         permissionGranted = true;
         button.style.display = 'none';
         lastTime = millis() / 1000;
+        startGeolocation();
       }
     } else {
       permissionGranted = true;
       button.style.display = 'none';
       lastTime = millis() / 1000;
+      startGeolocation();
     }
   });
+}
+
+function startGeolocation() {
+  // Start watching position for elevation updates
+  if (navigator.geolocation) {
+    navigator.geolocation.watchPosition(
+      (position) => {
+        if (position.coords.altitude !== null) {
+          elevation = position.coords.altitude;
+        }
+      },
+      (error) => {
+        console.log('Geolocation error:', error);
+      },
+      {
+        enableHighAccuracy: true,
+        maximumAge: 1000
+      }
+    );
+  }
 }
 
 function draw() {
@@ -191,8 +214,9 @@ function drawIndicator() {
   textAlign(CENTER);
   textSize(16);
   fill(255);
-  text(`Heading: ${heading.toFixed(0)}°`, width/2, height-60);
-  text(`Turn rate: ${turnRate.toFixed(1)}°/s`, width/2, height-40);
+  text(`Heading: ${heading.toFixed(0)}°`, width/2, height-80);
+  text(`Turn rate: ${turnRate.toFixed(1)}°/s`, width/2, height-60);
+  text(`Elevation: ${elevation.toFixed(1)} m`, width/2, height-40);
 }
 
 function handleOrientation(event) {

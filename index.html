@@ -12,5 +12,13 @@
   </head>
   <body>
     <button id="enableMotion">Enable Sensors</button>
+    <script>
+      // Register service worker for offline functionality
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/service-worker.js')
+          .then(reg => console.log('Service Worker registered'))
+          .catch(err => console.log('Service Worker registration failed:', err));
+      }
+    </script>
   </body>
 </html>
