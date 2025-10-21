@@ -207,16 +207,43 @@ function drawIndicator() {
   imageMode(CENTER);
   const planeWidth = 225;
   const planeHeight = planeWidth * (planeImg.height / planeImg.width);
-  image(planeImg, width/2, height/2, planeWidth, planeHeight);
+  image(planeImg, width/2, height/2 - 30, planeWidth, planeHeight);
   pop();
 
-  // Draw debug info
-  textAlign(CENTER);
-  textSize(16);
+  // Draw info panel below compass
+  drawInfoPanel();
+}
+
+function drawInfoPanel() {
+  push();
+  
+  const panelY = 140;
+  const panelWidth = width * 0.8;
+  const panelHeight = 80;
+  const centerX = width / 2;
+  
+  // Draw panel background
+  fill(0, 0, 0, 150);
+  stroke(255);
+  strokeWeight(2);
+  rect(centerX - panelWidth/2, panelY, panelWidth, panelHeight, 10);
+  
+  // Draw info text
+  noStroke();
   fill(255);
-  text(`Heading: ${heading.toFixed(0)}°`, width/2, height-80);
-  text(`Turn rate: ${turnRate.toFixed(1)}°/s`, width/2, height-60);
-  text(`Elevation: ${elevation.toFixed(1)} m`, width/2, height-40);
+  textAlign(CENTER, CENTER);
+  textSize(16);
+  
+  text(`Heading:`, centerX - panelWidth/2 + 48, panelY + 25);
+  text(`${heading.toFixed(0)}°`, centerX - panelWidth/2 + 117, panelY + 25);
+
+  text(`Turn rate:`, centerX - panelWidth/2 + 50, panelY + 50);
+  text(`${turnRate.toFixed(1)}°/s`, centerX - panelWidth/2 + 130, panelY + 50);
+  
+  text(`Elevation:`, centerX + panelWidth/2 - 120, panelY + 25);
+  text(`${elevation.toFixed(1)} m`, centerX + panelWidth/2 - 50, panelY + 25);
+  
+  pop();
 }
 
 function handleOrientation(event) {
