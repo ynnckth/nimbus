@@ -1,5 +1,5 @@
 let heading = 0;
-let lastHeading = 0;
+let lastHeading = null; // null until first reading
 let lastTime = 0;
 let turnRate = 0;
 let rollAngle = 0;
@@ -42,6 +42,7 @@ function draw() {
   }
 
   drawHorizon(rollAngle);
+  drawCompass();
   drawIndicator();
 }
 
@@ -64,6 +65,85 @@ function drawHorizon(roll) {
   stroke(255);
   strokeWeight(4);
   line(-width, 0, width, 0);
+  pop();
+}
+
+function drawCompass() {
+  push();
+  
+  // Compass position and size
+  const compassY = 80;
+  const compassWidth = width * 0.8;
+  const compassHeight = 60;
+  const centerX = width / 2;
+  
+  // Draw compass background
+  fill(0, 0, 0, 150);
+  stroke(255);
+  strokeWeight(2);
+  rect(centerX - compassWidth/2, compassY - compassHeight/2, compassWidth, compassHeight, 10);
+  
+  // Draw compass tape (scrolling based on heading)
+  noStroke();
+  textAlign(CENTER, CENTER);
+  textSize(18);
+  
+  // Cardinal directions and their degree positions
+  const directions = [
+    {deg: 0, label: 'N'}, {deg: 45, label: 'NE'}, {deg: 90, label: 'E'}, 
+    {deg: 135, label: 'SE'}, {deg: 180, label: 'S'}, {deg: 225, label: 'SW'},
+    {deg: 270, label: 'W'}, {deg: 315, label: 'NW'}, {deg: 360, label: 'N'}
+  ];
+  
+  // Degree marks
+  const degreesVisible = 120; // Range of degrees visible
+  const pixelsPerDegree = compassWidth / degreesVisible;
+  
+  for (let deg = Math.floor(heading - degreesVisible/2); deg <= heading + degreesVisible/2; deg += 10) {
+    const normalizedDeg = ((deg % 360) + 360) % 360;
+    const offset = (deg - heading) * pixelsPerDegree;
+    const x = centerX + offset;
+    
+    if (x >= centerX - compassWidth/2 && x <= centerX + compassWidth/2) {
+      // Draw tick marks
+      stroke(255);
+      strokeWeight(1);
+      if (normalizedDeg % 30 === 0) {
+        line(x, compassY - 15, x, compassY - 5);
+      } else {
+        line(x, compassY - 10, x, compassY - 5);
+      }
+    }
+  }
+  
+  // Draw direction labels
+  for (let dir of directions) {
+    const offset = (dir.deg - heading) * pixelsPerDegree;
+    const x = centerX + offset;
+    
+    // Wrap around for continuity
+    const wrappedOffsets = [offset, offset + 360 * pixelsPerDegree, offset - 360 * pixelsPerDegree];
+    
+    for (let wrappedOffset of wrappedOffsets) {
+      const wrappedX = centerX + wrappedOffset;
+      if (wrappedX >= centerX - compassWidth/2 && wrappedX <= centerX + compassWidth/2) {
+        fill(255);
+        noStroke();
+        text(dir.label, wrappedX, compassY + 8);
+      }
+    }
+  }
+  
+  // Draw center indicator (triangle pointing down)
+  fill(255, 200, 0);
+  noStroke();
+  triangle(centerX - 8, compassY - 25, centerX + 8, compassY - 25, centerX, compassY - 15);
+  
+  // Draw current heading number at top
+  fill(255, 200, 0);
+  textSize(20);
+  text(`${Math.round(heading)}°`, centerX, compassY - 40);
+  
   pop();
 }
 
@@ -106,17 +186,36 @@ function drawIndicator() {
   textSize(16);
   text(`Heading: ${heading.toFixed(0)}°`, width/2, height-60);
   text(`Turn rate: ${turnRate.toFixed(1)}°/s`, width/2, height-40);
-  text(`Roll: ${rollAngle.toFixed(1)}°`, width/2, height-20);
 }
 
-window.addEventListener('deviceorientation', (event) => {
+function handleOrientation(event) {
   if (!permissionGranted) return;
 
   const now = millis() / 1000;
   const deltaTime = now - lastTime;
 
-  // Use only absolute heading (yaw)
-  const alpha = event.alpha || 0;
+  // Get true compass heading
+  let alpha;
+  if (event.webkitCompassHeading !== undefined) {
+    // iOS: webkitCompassHeading gives true compass heading (0 = North)
+    alpha = event.webkitCompassHeading;
+  } else if (event.absolute && event.alpha !== null) {
+    // Android with absolute orientation (compass-based)
+    alpha = event.alpha;
+  } else if (event.alpha !== null) {
+    // Fallback to relative alpha
+    alpha = event.alpha;
+  } else {
+    return; // No valid data
+  }
+
+  // Initialize on first reading
+  if (lastHeading === null) {
+    lastHeading = alpha;
+    lastTime = now;
+    heading = alpha;
+    return;
+  }
 
   // Shortest angle between headings, handling wrap-around
   const deltaHeading = ((alpha - lastHeading + 540) % 360) - 180;
@@ -129,12 +228,16 @@ window.addEventListener('deviceorientation', (event) => {
   const filteredTurnRate = Math.abs(turnRate) < deadzone ? 0 : turnRate;
   
   // Map turn rate to roll angle, clamp to maxRoll
-  // Negate to get correct banking direction: right turn = horizon tilts left (counter-clockwise)
-  const targetRoll = -constrain((filteredTurnRate / maxTurnRate) * maxRoll, -maxRoll, maxRoll);
+  // Right turn = horizon tilts left (counter-clockwise)
+  const targetRoll = constrain((filteredTurnRate / maxTurnRate) * maxRoll, -maxRoll, maxRoll);
   // Apply smoothing to roll angle for smoother visual response
   rollAngle = rollAngle * (1 - smoothing) + targetRoll * smoothing;
 
   lastHeading = alpha;
   lastTime = now;
   heading = alpha;
-});
+}
+
+// Listen to both absolute and regular orientation events for best compatibility
+window.addEventListener('deviceorientationabsolute', handleOrientation, true);
+window.addEventListener('deviceorientation', handleOrientation, true);
