@@ -1,11 +1,11 @@
 const CACHE_NAME = 'nimbus-v1';
 const URLS_TO_CACHE = [
-  '/',
-  '/index.html',
-  '/style.css',
-  '/sketch.js',
-  '/assets/plane.png',
-  '/manifest.json'
+  './',
+  './index.html',
+  './style.css',
+  './sketch.js',
+  './assets/plane.png',
+  './manifest.json'
 ];
 
 self.addEventListener('install', (event) => {
