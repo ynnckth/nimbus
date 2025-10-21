@@ -1,4 +1,4 @@
-const CACHE_NAME = 'nimbus-v1';
+const CACHE_NAME = 'nimbus-v2';
 const URLS_TO_CACHE = [
   './',
   './index.html',
