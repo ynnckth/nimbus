@@ -23,3 +23,13 @@ npx http-server . -p 8080 --ssl --cert cert.pem --key key.pem
 
 Access the app at:
 > https://[YOUR_IP]:8080
+
+## Ideas
+
+- [ ] Show procedurally generated terrain
+- [ ] Show individual elevation panel (climbing/descending)
+
+- [ ] Introduce bottom tab navigation
+- [ ] Add tab containing map/route (world map with major city names), show approximate location and heading
+- [ ] Add option to enter origin and desitnation and approximate route (with average flight duration?)
+- [ ] Wrap the webapp in a iOS app using cordova or similar framework
