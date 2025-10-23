@@ -282,31 +282,40 @@ function drawInfoPanel() {
   push();
   
   const panelY = 140;
-  const panelWidth = width * 0.8;
+  const panelWidth = width * 0.38; // Narrower panels
   const panelHeight = 80;
   const centerX = width / 2;
+  const gap = 20; // Gap between panels
   
-  // Draw panel background
+  // Left panel - Heading and Turn Rate
   fill(0, 0, 0, 150);
   stroke(255);
   strokeWeight(2);
-  rect(centerX - panelWidth/2, panelY, panelWidth, panelHeight, 10);
+  rect(centerX - panelWidth - gap/2, panelY, panelWidth, panelHeight, 10);
   
-  // Draw info text
+  // Left panel text
+  noStroke();
+  fill(255);
+  textAlign(LEFT, CENTER);
+  textSize(16);
+  
+  const leftPanelX = centerX - panelWidth - gap/2 + 20; // Add margin from left edge
+  text(`Heading: ${heading.toFixed(0)}°`, leftPanelX, panelY + 25);
+  text(`Turn rate: ${turnRate.toFixed(1)}°/s`, leftPanelX, panelY + 50);
+
+  // Right panel - Elevation
+  fill(0, 0, 0, 150);
+  stroke(255);
+  strokeWeight(2);
+  rect(centerX + gap/2, panelY, panelWidth, panelHeight, 10);
+  
+  // Right panel text
   noStroke();
   fill(255);
   textAlign(CENTER, CENTER);
   textSize(16);
-  
-  text(`Heading:`, centerX - panelWidth/2 + 48, panelY + 25);
-  text(`${heading.toFixed(0)}°`, centerX - panelWidth/2 + 117, panelY + 25);
 
-  text(`Turn rate:`, centerX - panelWidth/2 + 50, panelY + 50);
-  text(`${turnRate.toFixed(1)}°/s`, centerX - panelWidth/2 + 130, panelY + 50);
-  
-  text(`Elevation:`, centerX + panelWidth/2 - 120, panelY + 25);
-  text(`${elevation.toFixed(1)} m`, centerX + panelWidth/2 - 50, panelY + 25);
-  
+  text(`Elevation: ${elevation.toFixed(1)}m`, centerX + gap / 2 + panelWidth / 2, panelY + 25);
   pop();
 }
 
