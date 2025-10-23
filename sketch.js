@@ -70,6 +70,7 @@ function draw() {
   }
 
   drawHorizon(rollAngle);
+  drawRollScales(rollAngle);
   drawCompass();
   drawIndicator();
 }
@@ -93,6 +94,70 @@ function drawHorizon(roll) {
   stroke(255);
   strokeWeight(4);
   line(-width, 0, width, 0);
+  pop();
+}
+
+function drawRollScales() {
+  push();
+  
+  const scaleHeight = height * 0.6;
+  const centerY = height / 2;
+  const leftX = 30; // Distance from left edge
+  const rightX = width - 30; // Distance from right edge
+  const tickLength = 15;
+  
+  stroke(255);
+  strokeWeight(2);
+  
+  // Draw left scale
+  line(leftX, centerY - scaleHeight/2, leftX, centerY + scaleHeight/2);
+  
+  // Draw tick marks at 10-degree intervals
+  for (let angle = -30; angle <= 30; angle += 10) {
+    const y = centerY + (angle / 30) * (scaleHeight / 2);
+    
+    if (angle === 0) {
+      // Special center marker (level indicator)
+      stroke(255, 200, 0);
+      strokeWeight(3);
+      line(leftX - tickLength, y, leftX + tickLength, y);
+      // Draw a rectangle for emphasis
+      noStroke();
+      fill(255, 200, 0);
+      rect(leftX - tickLength - 5, y - 3, tickLength * 2 + 10, 6, 2);
+    } else {
+      // Regular tick marks
+      stroke(255);
+      strokeWeight(2);
+      line(leftX - tickLength, y, leftX, y);
+    }
+  }
+  
+  // Draw right scale (mirror of left)
+  stroke(255);
+  strokeWeight(2);
+  line(rightX, centerY - scaleHeight/2, rightX, centerY + scaleHeight/2);
+  
+  for (let angle = -30; angle <= 30; angle += 10) {
+    const y = centerY + (angle / 30) * (scaleHeight / 2);
+    
+    if (angle === 0) {
+      // Special center marker (level indicator)
+      stroke(255, 200, 0);
+      strokeWeight(3);
+      line(rightX - tickLength, y, rightX + tickLength, y);
+      // Draw a rectangle for emphasis
+      noStroke();
+      fill(255, 200, 0);
+      rect(rightX - tickLength - 5, y - 3, tickLength * 2 + 10, 6, 2);
+    } else {
+      // Regular tick marks
+      stroke(255);
+      strokeWeight(2);
+      line(rightX, y, rightX + tickLength, y);
+    }
+  }
+  
   pop();
 }
 
@@ -147,8 +212,7 @@ function drawCompass() {
   // Draw direction labels
   for (let dir of directions) {
     const offset = (dir.deg - heading) * pixelsPerDegree;
-    const x = centerX + offset;
-    
+
     // Wrap around for continuity
     const wrappedOffsets = [offset, offset + 360 * pixelsPerDegree, offset - 360 * pixelsPerDegree];
     
