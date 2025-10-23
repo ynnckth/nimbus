@@ -329,7 +329,7 @@ function drawInfoPanel() {
   textSize(16);
 
   const rightPanelX = centerX + gap / 2 + 20; // Left margin from panel edge
-  text(`Elevation: ${elevation.toFixed(1)}m`, rightPanelX, panelY + 25);
+  text(`Elevation: ${elevation.toFixed(0)}m`, rightPanelX, panelY + 25);
 
   // Draw pitch label and arrow
   const pitchY = panelY + 55;
@@ -346,25 +346,25 @@ function drawInfoPanel() {
   noStroke();
 
   if (elevationRate > threshold) {
-    // Climbing - upward arrow
+    // Climbing - upward arrow (center aligned)
     triangle(
-      arrowX, pitchY - arrowSize,
-      arrowX - arrowSize / 2, pitchY,
-      arrowX + arrowSize / 2, pitchY
+      arrowX, pitchY - arrowSize / 2,
+      arrowX - arrowSize / 2, pitchY + arrowSize / 2,
+      arrowX + arrowSize / 2, pitchY + arrowSize / 2
     );
   } else if (elevationRate < -threshold) {
-    // Descending - downward arrow
+    // Descending - downward arrow (center aligned)
     triangle(
-      arrowX, pitchY + arrowSize,
-      arrowX - arrowSize / 2, pitchY,
-      arrowX + arrowSize / 2, pitchY
+      arrowX, pitchY + arrowSize / 2,
+      arrowX - arrowSize / 2, pitchY - arrowSize / 2,
+      arrowX + arrowSize / 2, pitchY - arrowSize / 2
     );
   } else {
-    // Stable - right arrow
+    // Stable - right arrow (center aligned)
     triangle(
-      arrowX + arrowSize, pitchY,
-      arrowX, pitchY - arrowSize / 2,
-      arrowX, pitchY + arrowSize / 2
+      arrowX + arrowSize / 2, pitchY,
+      arrowX - arrowSize / 2, pitchY - arrowSize / 2,
+      arrowX - arrowSize / 2, pitchY + arrowSize / 2
     );
   }
 
