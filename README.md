@@ -1,6 +1,6 @@
 # Nimbus
 
-Highly inaccurate flight instrument information for the casual passenger to increase spacial awareness and hopefully reduce anxiety during low-visibility flights.
+Highly inaccurate flight instrument information for the casual flight passenger to increase spatial awareness and hopefully reduce anxiety during low-visibility flights.
 
 The "attitude indicator" is a flight instrument that shows the plane's pitch and roll relative to the horizon.
 This project focuses on approximating the roll angle of the plane by measuring the rate of change of the plane's absolute heading and translating that to the angle of the horizon in relation to the plane.
@@ -27,9 +27,6 @@ Access the app at:
 ## Ideas
 
 - [ ] Show procedurally generated terrain
-- [ ] Show individual elevation panel (climbing/descending)
-
 - [ ] Introduce bottom tab navigation
 - [ ] Add tab containing map/route (world map with major city names), show approximate location and heading
-- [ ] Add option to enter origin and desitnation and approximate route (with average flight duration?)
-- [ ] Wrap the webapp in a iOS app using cordova or similar framework
+- [ ] Add option to enter origin and destination and approximate route (with average flight duration?)
