@@ -1,24 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#000000" />
-    <link rel="manifest" href="manifest.json" />
-    <title>Nimbus</title>
-    <link rel="stylesheet" href="style.css" />
-    <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="theme-color" content="#87CEEB"/>
+    <!-- PWA manifest -->
+    <link rel="manifest" href="manifest.json"/>
+
+    <!-- iOS home screen icon -->
+    <link rel="apple-touch-icon" href="/assets/icons/icon-512x512.png">
+
+    <!-- Standard favicon for browsers -->
+    <link rel="icon" type="image/png" sizes="48x48" href="/assets/icons/icon-48x48.png">
+
+    <title>Horizone</title>
+    <link rel="stylesheet" href="style.css"/>
+    <script src="/lib/p5.min.js"></script>
     <script src="sketch.js" defer></script>
-  </head>
-  <body>
-    <button id="enableMotion">Enable Sensors</button>
-    <script>
-      // Register service worker for offline functionality
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./service-worker.js')
-          .then(reg => console.log('Service Worker registered'))
-          .catch(err => console.log('Service Worker registration failed:', err));
-      }
-    </script>
-  </body>
+</head>
+<body>
+<button id="enableMotion">Enable Sensors</button>
+<script>
+  // Register service worker for offline functionality
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./service-worker.js')
+        .then(reg => console.log('Service Worker registered'))
+        .catch(err => console.log('Service Worker registration failed:', err));
+  }
+</script>
+</body>
 </html>

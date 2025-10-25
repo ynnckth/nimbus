@@ -1,10 +1,10 @@
 {
-  "name": "Nimbus",
-  "short_name": "Nimbus",
+  "name": "Horizone",
+  "short_name": "Horizone",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#000000",
-  "theme_color": "#000000",
+  "background_color": "#87CEEB",
+  "theme_color": "#87CEEB",
   "icons": [
     {
       "src": "./assets/icons/icon-48x48.png",

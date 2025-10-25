@@ -1,11 +1,12 @@
-const CACHE_NAME = 'nimbus-v4';
+const CACHE_NAME = 'horizone-v5';
 const URLS_TO_CACHE = [
   './',
   './index.html',
   './style.css',
   './sketch.js',
   './assets/plane.png',
-  './manifest.json'
+  './manifest.json',
+  './lib/p5.min.js',
 ];
 
 self.addEventListener('install', (event) => {
