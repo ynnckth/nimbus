@@ -6,7 +6,6 @@ const URLS_TO_CACHE = [
   './sketch.js',
   './assets/plane.png',
   './manifest.json',
-  './lib/p5.min.js',
 ];
 
 self.addEventListener('install', (event) => {
